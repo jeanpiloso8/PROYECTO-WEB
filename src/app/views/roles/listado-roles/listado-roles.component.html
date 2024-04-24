@@ -1,0 +1,21 @@
+<div class="animate__animated animate__fadeIn">
+ 
+    <ejs-grid #grid 
+              [dataSource]='data' 
+              [allowPaging]="true" 
+              [pageSettings]='pageSettings' 
+              [allowSorting]='true' 
+              [toolbar]="toolbar"
+              enableStickyHeader=true 
+              (toolbarClick)='clickHandler($event)'
+              (commandClick)="commandClick($event)"
+              [editSettings]='editSettings' 
+              >
+      <e-columns>
+          <e-column headerText="" width="50" [commands]="commands"></e-column>
+          <e-column field='id' headerText='Id' width='120' textAlign='Right' [visible]="false" [isPrimaryKey]="true"></e-column>
+          <e-column field='name' headerText='Name' width='120' [validationRules]='rolenamerules'  ></e-column>
+      </e-columns>
+  </ejs-grid>
+
+</div>

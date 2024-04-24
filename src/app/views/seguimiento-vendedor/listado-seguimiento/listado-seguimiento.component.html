@@ -1,0 +1,62 @@
+
+    <div class="right-z-index-top-toolbar">
+        <ejs-toolbar height="25px"  width='100%'>
+            <e-items>
+                <e-item text='Consultar'  prefixIcon='e-icons e-search'  overflow='Show' showTextOn='overflow'></e-item>     
+            </e-items>
+        </ejs-toolbar>
+    </div>   
+    
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card border">
+                <div class="card-header">
+                    <svg [cIcon]="icons.cilSearch" size="lg" title="List Icon" class="mr-2"></svg>&nbsp;  Búsqueda
+                 </div>
+    
+                <div class="card-body">
+                    <div class="row">
+                        <c-row class="mt-2">
+                            <c-col lg="3">
+                                <label cLabel>Desde:</label>
+                                <input cFormControl id="fechadesde" sizing="sm" type="date">                   
+                            </c-col>
+                            <c-col lg="3">
+                                <label cLabel>Hasta:</label>
+                                <input cFormControl id="fechahasta" sizing="sm" type="date">                                
+                            </c-col>
+                         
+                            </c-row>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="animate__animated animate__fadeIn">
+                                <div class="control-section">
+                                    <div class="col-lg-12">
+                                        <ejs-grid #grid id='DefaultExport'  [dataSource]="datos" [allowPaging]="true" [pageSettings]='pageOption' [allowResizing]="true" [allowSorting]='true' allowGrouping='true' [toolbar]='toolbar' enableStickyHeader=true 
+                                     (commandClick)="commandClick($event)" [allowSorting]='true'  [allowExcelExport]='true' [allowPdfExport]='true'  (toolbarClick)='toolbarClick($event)' (dataBound)='dataBound()'
+                                     (excelQueryCellInfo)='exportQueryCellInfo($event)' (pdfQueryCellInfo)='exportQueryCellInfo($event)' height='350'>
+                                            <e-columns>
+                                                <e-column field='id' headerText='Id' width='10' textAlign='Right' [visible]="false" [isPrimaryKey]="true"></e-column>
+                                                <e-column headerText="" width="75" [commands]="commands" textAlign="center"></e-column>
+                                                    <e-column field='vendedor' headerText='Vendedor' width='100' textAlign='left' ></e-column>
+                                                    <e-column field='cliente' headerText='Cliente' width='130'></e-column>
+                                                    <e-column field='fecha' headerText='Fecha' width='150' textAlign='left'></e-column>
+                                                    <e-column field='motivo' headerText='Motivo' width='120' textAlign='left'  ></e-column>
+
+                                            </e-columns>
+                                         
+                                        </ejs-grid>
+                                    </div>     
+            
+            
+                                    </div>
+                                    </div>
+                                 </div>
+                                 
+                        

@@ -1,0 +1,34 @@
+<div class="animate__animated animate__fadeIn">
+
+        <ejs-grid #grid 
+                  [dataSource]='data' 
+                  [allowPaging]="true" 
+                  [pageSettings]='pageSettings' 
+                  [allowSorting]='true' 
+                  [toolbar]="toolbar"
+                  enableStickyHeader=true 
+                  (toolbarClick)='clickHandler($event)'
+                  (commandClick)="commandClick($event)"
+                  [editSettings]='editSettings' 
+                  >
+          <e-columns>
+              <e-column headerText="" width="150" [commands]="commands"></e-column>
+              <e-column field='id' headerText='Id' width='120' textAlign='Right' [visible]="false" [isPrimaryKey]="true"></e-column>
+              <e-column field='userName' headerText='UserName' width='120'  ></e-column>
+              <e-column field='fullName' headerText='Nombre Completo' width='120'></e-column>
+              <e-column field='email' headerText='E-Mail' width='120'></e-column>
+              <e-column field='roleNames' headerText='Roles' width='200' textAlign='Center' >
+                  <ng-template #template e-template let-data>
+                    <ng-container *ngFor="let role of transformRolesToBadgeArray(data.roleNames)">
+                      <span class="badge bg-primary me-1">{{ role }}</span>
+                    </ng-container>
+                  </ng-template>
+              </e-column>
+              
+              <e-column field='phoneNumber' headerText='Fono' width='120'></e-column>
+              <e-column field='status' headerText='Activo' width='120'></e-column>
+          </e-columns>
+      </ejs-grid>
+
+    </div>
+    

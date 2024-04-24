@@ -1,0 +1,7 @@
+{
+    "/WebService": {
+      "target": "https://grupohg.com.ec",
+      "secure": false,
+      "changeOrigin": true
+    }
+  }

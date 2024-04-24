@@ -1,0 +1,26 @@
+<div class="animate__animated animate__fadeIn">
+    <div class="control-section">
+        <div class="col-lg-12">
+            <ejs-treegrid #treegrid 
+                    [dataSource]='data'    
+                    [toolbar]='toolbarOptions' 
+                    (toolbarClick)='clickHandler($event)'
+                    (commandClick)="commandClick($event)"
+                    [treeColumnIndex]='1'  
+                    [editSettings]='editSettings'                     
+                    childMapping='menus'
+                    >
+                <e-columns>
+                    <e-column headerText="" width="80" [commands]="commands"></e-column>
+                    <e-column field='id' headerText='Id' textAlign='Right' width=80 [isPrimaryKey]='true'></e-column>
+                    <e-column field='nombre' headerText='Nombre' textAlign='Left' width=100></e-column>                            
+                    <e-column field='icono' headerText='Icono' textAlign='Left' width=80></e-column>
+                    <e-column field='url' headerText='Url' textAlign='Left' width=80></e-column>
+                    <e-column field='orden' headerText='Orden' editType='numericedit' [edit]='numericParams' textAlign='Right' type="number" width=50></e-column>
+                    <e-column field='activo' headerText='Activo' textAlign='Left' width=80></e-column>
+                </e-columns>
+                </ejs-treegrid>
+        </div>
+    </div>
+
+</div>

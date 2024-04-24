@@ -1,0 +1,67 @@
+
+<div class="animate__animated animate__fadeIn">
+    <form cForm
+    [formGroup]="form">
+
+    <div class="right-z-index-top-toolbar">
+        <ejs-toolbar height="25px"  width='100%'>
+            <e-items>
+                <e-item text='Grabar' tooltipText='Grabar - Alt+G' prefixIcon='e-icons e-save' overflow='Show' showTextOn='overflow' (click)="guardarCambios()" [disabled]="form.invalid" ></e-item>
+                <e-item text='Cancelar' tooltipText='Cancelar - Alt+C' prefixIcon='e-icons e-undo' overflow='Show' showTextOn='overflow' (click)="cancelar()"  ></e-item>
+            </e-items>
+        </ejs-toolbar>
+    </div>   
+    
+    <br/>
+
+    <c-row >
+        <c-col md="6" lg="6" xl="6">
+            <c-card >
+                <c-card-body>                                                    
+
+
+                        <c-col >
+                            <label cLabel >Username</label>
+                            <input [valid]="form.get('UserName').valid" cFormControl formControlName="UserName" type="text" #UserName />
+                            <c-form-feedback [valid]="form.get('UserName').valid && (form.get('UserName').touched)">{{obtenerError('UserName')}}</c-form-feedback>
+                        </c-col>
+                        
+                        <c-col >
+                            <label cLabel >Email</label>
+                            <input [valid]="form.get('Email').valid" cFormControl type="email" formControlName="Email" type="email" #Email/>
+                            <c-form-feedback [valid]="form.get('Email').valid && (form.get('Email').touched)">{{obtenerError('Email')}}</c-form-feedback>
+                        </c-col>
+
+                        <c-col >
+                            <label cLabel >Teléfono</label>
+                            <input cFormControl formControlName="PhoneNumber" type="text" #PhoneNumber/>
+                        </c-col>
+
+                        <c-col >
+                            <label cLabel >Nombre Completo</label>
+                            <input [valid]="form.get('FullName').valid" cFormControl formControlName="FullName" type="text" #FullName />
+                            <c-form-feedback [valid]="form.get('FullName').valid && (form.get('FullName').touched)">{{obtenerError('FullName')}}</c-form-feedback>
+                        </c-col>
+
+                        <c-col >
+                            <label cLabel >Roles</label>
+                            <ejs-multiselect formControlName="Roles" id='Roles'  [dataSource]='listadoRoles' [mode]='default' [fields]='fields' [placeholder]='multiselectWaterMark' #Roles></ejs-multiselect>
+                        </c-col>
+
+                        
+
+                        <br/>
+                        <c-form-check [switch]="true">
+                            <input cFormCheckInput type="checkbox" id="Status" formControlName="Status"  />
+                            <label #lblEstado id="lblEstado" cFormCheckLabel>{{setLabelEstado()}}</label>
+                        </c-form-check>                    
+                    
+                        <br/>
+                </c-card-body>
+            </c-card>
+        </c-col>
+    </c-row> 
+    </form> 
+</div>
+
+

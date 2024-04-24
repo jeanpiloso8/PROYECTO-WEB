@@ -1,0 +1,80 @@
+// Here you can add other styles
+
+@import '../../node_modules/animate.css/animate.min.css';
+
+@import "@ng-select/ng-select/themes/material.theme.css";
+
+
+// custom .chartjs-tooltip-body-item padding
+@import "charts";
+
+  // custom tweaks for scrollbar styling (wip)
+@import "scrollbar";
+
+// custom calendar today cell color
+.calendar-cell.today {
+ --cui-calendar-cell-today-color: var(--cui-info) !important;
+}
+
+// custom select week cursor pointer
+.select-week .calendar-row.current {
+ cursor: pointer;
+}
+
+ /* Estilo para mostrar el spinner */
+ .show-spinner .spinner {
+  display: block; /* Mostrar el spinner */
+  
+}
+
+/* Estilo para ocultar el spinner */
+.spinner {
+  display: none; /* Ocultar el spinner por defecto */
+  // margin-left: 5px; /* Agrega margen a la izquierda del spinner */
+}
+
+/* Estilo para el botón personalizado */
+.custom-button {
+  display: flex; /* Usa display flex para alinear elementos horizontalmente */
+  align-items: center; /* Centra verticalmente los elementos */
+  // justify-content: space-between; /* Alinea el ícono y el texto al comienzo y final del botón */
+  // width: 60%; /* Establece el ancho completo del botón */
+}
+
+.main-form
+{
+  margin: 10px;
+}
+
+
+.right-z-index-top-toolbar {
+  z-index: 800;
+  position: fixed;
+  top: 112px;
+  height: 50px;
+  width: 100%;
+  margin-top: 0;
+  padding: 3px;
+  border-radius: 0;
+}
+
+.sidebar
+{
+font-size: 80%!important;
+}
+
+
+.e-toolbar .e-tbar-btn {
+  // padding: 6px 12px!important; /* Padding similar al de los botones de Bootstrap */
+  line-height: 1.4!important; /* Line-height para centrar verticalmente el texto */
+  cursor: pointer!important; /* Cambia el cursor para indicar que es clickeable */
+}
+
+.e-spinner-pane .e-spinner-inner .e-spin-bootstrap {
+  fill: green;
+  stroke: green;
+}
+
+.white-border::placeholder {
+  color: #495057; /* Oscuro para contraste, ajusta según tu esquema de color */
+}

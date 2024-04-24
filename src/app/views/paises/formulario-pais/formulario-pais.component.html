@@ -1,0 +1,52 @@
+<div class="animate__animated animate__fadeIn">
+    <form cForm
+    [formGroup]="form">
+
+    <div class="right-z-index-top-toolbar">
+        <ejs-toolbar height="25px"  width='100%'>
+            <e-items>
+                <e-item text='Grabar' tooltipText='Grabar - Alt+G' prefixIcon='e-icons e-save' overflow='Show' showTextOn='overflow' (click)="guardarCambios()" [disabled]="form.invalid" ></e-item>
+                <e-item text='Cancelar' tooltipText='Cancelar - Alt+C' prefixIcon='e-icons e-undo' overflow='Show' showTextOn='overflow' (click)="cancelar()"  ></e-item>
+            </e-items>
+        </ejs-toolbar>
+    </div>
+
+    <br/>
+    <c-row>
+        <c-col md="6" lg="6" xl="6">
+            <c-card>
+                <c-card-body> 
+                    <c-col >
+                        <label cLabel >Descripción</label>
+                        <input cFormControl  [valid]="form.get('descripcion').valid" autocomplete="off" formControlName="descripcion" type="text" #descripcion />  
+                        <c-form-feedback [valid]="form.get('descripcion').valid">{{obtenerError('descripcion')}}</c-form-feedback>
+                    </c-col>
+
+                    <c-col >
+                        <label cLabel >Código Discado</label>
+                        <input cFormControl  [valid]="form.get('codigoDiscado').valid" autocomplete="off" formControlName="codigoDiscado" type="text" #codigoDiscado />  
+                        <c-form-feedback [valid]="form.get('codigoDiscado').valid">{{obtenerError('codigoDiscado')}}</c-form-feedback>
+                    </c-col>
+        
+                    <c-col>
+                        <label cLabel >Región</label>
+                        <ejs-dropdownlist id='idRegion' 
+                        allowFiltering="true"
+                        [showClearButton]="true" 
+                        formControlName="idRegion" 
+                        [dataSource]='regiones' 
+                        [fields]='fields' 
+                        [placeholder]='localWaterMark'></ejs-dropdownlist> 
+                        <div *ngIf="form.get('idRegion').invalid && (form.get('idRegion').touched)"
+                                         class="alert alert-danger">
+                                         {{obtenerError('idRegion')}}
+                        </div>
+                    </c-col>
+                </c-card-body>
+            </c-card>
+        </c-col>
+    </c-row>
+  
+    
+</form>
+</div>
