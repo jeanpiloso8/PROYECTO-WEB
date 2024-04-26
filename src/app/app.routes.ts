@@ -57,6 +57,14 @@ export const routes: Routes = [
         path: 'seguimiento',
         loadChildren: () => import('./views/seguimiento-vendedor/seguimiento-vendedor.module').then((m) => m.SeguimientoVendedorModule)
       },
+      {
+        path: 'visitavendedor',
+        loadChildren: () => import('./views/visitas-vendedor/visitas-vendedor.module').then((m) => m.VisitasVendedorModule)
+      },
+      {
+        path: 'ruterovendedor',
+        loadChildren: () => import('./views/rutero-vendedor/rutero-vendedor.module').then((m) => m.RuteroVendedorModule)
+      },
     ]
   },
   {

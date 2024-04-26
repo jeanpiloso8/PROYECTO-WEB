@@ -21,8 +21,6 @@ export class ListadoSeguimientoComponent implements OnInit {
   constructor(private service : ServiceService){}
 ngOnInit(): void {
   this.commands = [{ buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-location'}, title:'Ubicacion' },
-  { buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-image'}, title:'Imagen' },
-  { buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-radio-button'}, title:'Audio' },
   ];
   this.pageOption = {pageCount: 5, pageSize:10};
   this.toolbar = ['ExcelExport', 'PdfExport', 'CsvExport','Search'];
@@ -41,6 +39,7 @@ ngOnInit(): void {
       
     this.service.obtener(body).subscribe(data => {
       this.datos = data;
+      console.log(data);
     })
   }
 
@@ -52,14 +51,6 @@ ngOnInit(): void {
       const titulo = 'Ubicación';
       const url = `https://www.google.com/maps?q=${args.rowData.latitud},${args.rowData.longitud}&output=embed&t=${titulo}`;
       window.open(url, "Diseño Web", "_blank");
-    }
-    else if (args.commandColumn.title && args.commandColumn.title=== 'Imagen')
-    {
-  
-    }
-    else if (args.commandColumn.title && args.commandColumn.title=== 'Audio')
-    {
-      
     }
   }
   dataBound() {

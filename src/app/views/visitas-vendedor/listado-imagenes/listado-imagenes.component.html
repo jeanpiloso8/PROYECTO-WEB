@@ -1,0 +1,28 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Listado de Imagenes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrar()" cButtonClose></button>
+    </div>
+    <div class="modal-body">
+        <div class="control-section">
+            <div class="col-lg-12">
+                <ejs-grid #grid id='DefaultExport'  [dataSource]="dataImg" [allowPaging]="true" [pageSettings]='pageOption' [allowResizing]="true" [allowSorting]='true'  [toolbar]='toolbar' enableStickyHeader=true  height='600'>
+                    <e-columns>
+                        <e-column field='numero' headerText='Id' width='10' textAlign='Right' [visible]="false" [isPrimaryKey]="true"></e-column>
+                        <e-column  headerText='Imagenes' width='150' textAlign='Center'>
+                            <ng-template #template let-data>
+                                <div class="image">
+                                    <img src="{{data.detalle}}" alt="{{data.numero}}"/>
+                                </div>
+                            </ng-template>
+                        </e-column>                   
+                    </e-columns>     
+                </ejs-grid>
+            </div>     
+
+
+            </div>
+
+        </div>
+        </div>
+    

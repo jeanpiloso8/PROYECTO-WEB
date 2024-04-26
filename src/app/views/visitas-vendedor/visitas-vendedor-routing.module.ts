@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListadoSeguimientoComponent } from './listado-seguimiento/listado-seguimiento.component';
+import { ListadoVisitasComponent } from './listado-visitas/listado-visitas.component';
 
 const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Seguimiento'
+      title: 'Visitas Vendedor'
     },
    // canActivateChild: [AuthGuard],
     children: [
@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'listado',
-        component: ListadoSeguimientoComponent,
+        component: ListadoVisitasComponent,
         data: {
           title: 'Listado'
         }
@@ -32,4 +32,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SeguimientoVendedorRoutingModule { }
+export class VisitasVendedorRoutingModule { }
