@@ -62,19 +62,21 @@ inicializar(){
 
 
   obtenerData(desde:string,hasta:string,vendedor:string) {
-  
+  console.log(desde);
     const body = {
       "op":"ConsultarVisita",
     "data":{
       "vendedor":vendedor,
       "dfecha":desde,
       "hfecha":hasta
-    }
-    }
+    } 
+    } 
       
     this.service.obtener(body).subscribe(data => {
-      this.datos = data;
-      console.log(this.datos);
+      if(JSON.stringify(data) != '"No Existe"'){
+        this.datos = data;
+      }
+     
    
     })
   }

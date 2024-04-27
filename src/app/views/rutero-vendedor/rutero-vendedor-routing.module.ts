@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListadoRuteroComponent } from './listado-rutero/listado-rutero.component';
+import { ModificaRuteroComponent } from './modifica-rutero/modifica-rutero.component';
+import { NuevoRuteroComponent } from './nuevo-rutero/nuevo-rutero.component';
 
 const routes: Routes = [
   {
@@ -20,6 +22,22 @@ const routes: Routes = [
         component: ListadoRuteroComponent,
         data: {
           title: 'Listado'
+        }
+      }
+      ,
+      {
+        path: 'nuevo',
+        component: NuevoRuteroComponent,
+        data: {
+          title: 'Nuevo'
+        }
+      }
+      ,
+      {
+        path: 'modifica',
+        component: ModificaRuteroComponent,
+        data: {
+          title: 'Modifica'
         }
       }
       ,

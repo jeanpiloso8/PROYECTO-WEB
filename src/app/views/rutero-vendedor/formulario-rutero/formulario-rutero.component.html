@@ -1,0 +1,117 @@
+<form [formGroup]="Form">
+<div class="right-z-index-top-toolbar">
+    <ejs-toolbar height="25px"  width='100%'>
+        <e-items>
+            <e-item text='Nuevo' [disabled]="!estadoBotones.btnNuevo"  prefixIcon='e-icons e-justify' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Grabar' [disabled]="!estadoBotones.btnGrabar"  prefixIcon='e-icons e-save' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Anular' [disabled]="!estadoBotones.btnAnular"  prefixIcon='e-icons e-trash' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Cancelar' [disabled]="!estadoBotones.btnSalir" prefixIcon='e-icons e-undo' overflow='Show' showTextOn='overflow'></e-item>
+        </e-items>
+    </ejs-toolbar>
+</div>   
+<br>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border">
+            <div class="card-header">
+               {{titulo}}
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+
+                    <c-row class="mt-2">
+                        <c-col lg="4">
+                            <label cLabel>N°Documento</label>
+                            <input cFormControl id="ndocumento" formControlName="ndocumento" sizing="sm" type="text">
+                           
+                        </c-col>
+                        <c-col lg="4">
+                            <label cLabel >Vendedor</label>
+                            <ejs-combobox  id='vendedor'  [dataSource]='cbvendedor'   [fields]= 'localFieldsVendedor' formControlName="vendedor"  [ngClass]="{ 'is-invalid': vendedor.invalid && vendedor.touched}"></ejs-combobox>  
+                            <c-form-feedback  [ngClass]="{ 'is-invalid': vendedor.invalid && vendedor.touched}">{{obtenerError('vendedor')}}</c-form-feedback>
+
+                        </c-col>
+                        <c-col lg="4">
+                            <label cLabel >Fecha</label>
+                            <input type="date"  cFormControl  sizing="sm" id="fecha" formControlName="fecha"  [ngClass]="{ 'is-invalid': fecha.invalid && fecha.touched}">                        
+                            <c-form-feedback  [ngClass]="{ 'is-invalid': fecha.invalid && fecha.touched}">{{obtenerError('fecha')}}</c-form-feedback>
+
+                        </c-col>
+                    </c-row>
+                    <c-row class="mt-2">
+                     <c-col lg="12">
+                            <label cLabel for="name">Descripción</label> 
+                            <textarea cFormControl   id="descripcion" autocomplete="off" rows="1" formControlName="descripcion"  [ngClass]="{ 'is-invalid': descripcion.invalid && descripcion.touched}"></textarea>
+                            <c-form-feedback  [ngClass]="{ 'is-invalid': descripcion.invalid && descripcion.touched}">{{obtenerError('descripcion')}}</c-form-feedback>
+                        </c-col>                   
+                    </c-row>
+                            
+                </div>
+                                     
+            </div></div>
+           
+            <div class="card border" style="margin-top: 10px;">
+               <div class="card-body">
+                <c-nav variant="tabs">
+                    <c-nav-item> 
+                      <a  [cTabContent]="tabContent2" cNavLink [routerLink] [tabPaneIdx]="0">        
+                        <button type="button" class="btn btn-primary btn-sm" (click)="btnNuevoProducto()"> 
+                            <svg [cIcon]="icons.cilPlus" size="lg" title="List Icon" class="mr-2"></svg>&nbsp; Agregar Producto </button>
+                    </a>
+                    </c-nav-item>
+                  </c-nav>
+            
+                  <c-tab-content #tabContent2="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+                    <c-tab-pane  class="p-1 preview">
+                     <form [formGroup]="FormTable">
+                                    <div class="table table-sm" style=" overflow: scroll; height: 350px; font-size:13px; font-family:arial,helvética; ">
+                                    <table  cTable small  style="width: 100%;">
+                                        <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                                        <tr>
+                                         <th class="padding-lt-5" style="min-width: 25px;"></th>
+                                          <th class="padding-lt-5"  style="min-width: 250px;">Cliente</th>
+                                          <th class="padding-lt-5"style="min-width: 250px; text-align:center;">Dirección</th>   
+                                          <th class="padding-lt-5"style="min-width: 100px; text-align:center;">Teléfono</th>                                     
+                                        </tr></thead>   
+                                        <ng-container *ngFor="let detalle of detalleRutas; let idx = index;">
+                                        <tr formGroupName="{{ detalle.cnoFormulario }}">
+                                            <td>
+                                                <button type="button" style="color: red;"
+                                                (click)="eliminarFilaDetalleFn(idx)"
+                                                class="btn btn-danger bg-gradient btn-sm">
+                                                <svg [cIcon]="icons.cilTrash"  title="List Icon" ></svg>
+                                                </button>
+                                              </td>
+                                            <td><ejs-combobox autofocus  id='comboelement'  
+                                              [dataSource]='cbcliente'  [fields]= 'localFieldsCliente' formControlName="codigo_cliente" placeholder = 'Seleccionar Cliente'  [noRecordsTemplate]="noRecordsTemplate"
+                                              [allowCustom]="false"
+                                              title="Debe seleccionar un cliente"
+                                              (ngModelChange)="onNgModelChange($event,idx)"
+                                              (keyup.enter)="enfocarSiguienteCelda(0,idx)"
+                                              (keydown)="handleKeydown($event, 0, idx)"
+                                              (change)="actualizarFilaDetalle($event, idx, 'codigo_cliente')"
+                                              ></ejs-combobox>
+                                              <ng-template #noRecordsTemplate>
+                                                  <!-- Aquí puedes personalizar el mensaje o dejarlo en blanco para ocultarlo -->
+                                                </ng-template></td>
+                                            <td style="text-align: center;">{{ detalle.direccion}}</td>
+                                            <td style="text-align: center;">{{ detalle.telefono}}</td>
+                                           </tr> </ng-container>
+                                      
+                                        
+                                    </table>
+                                </div>
+                            
+                     </form>       
+
+                    </c-tab-pane></c-tab-content>
+              </div>
+        
+        </div>
+            </div>
+</div>
+
+</form>

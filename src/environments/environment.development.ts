@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
     menu: 1,
-    apiURL: 'http://192.168.8.160:8000/api/'
+    apiURL: 'https://localhost:7777/api/'
   };
   export const environmentVendedor = {
     production: false,
