@@ -7,3 +7,61 @@
 </div>   
 
 <br/>
+<form [formGroup]="Form">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border">
+            <div class="card-header">
+                <svg [cIcon]="icons.cilSearch" size="lg" title="List Icon" class="mr-2"></svg>&nbsp;  Búsqueda
+             </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <c-row class="mt-2">
+                        <c-col lg="4">
+                            <label cLabel>Desde:</label>
+                            <input cFormControl id="fechadesde" formControlName="fechadesde" sizing="sm" type="date">                   
+                        </c-col>
+                        <c-col lg="4">
+                            <label cLabel>Hasta:</label>
+                            <input cFormControl id="fechahasta" formControlName="fechahasta" sizing="sm" type="date">                                
+                        </c-col>
+                        <c-col lg="4">
+                            <label cLabel>Vendedor:</label>
+                            <ejs-combobox  id='vendedor' formControlName="vendedor" [allowCustom]="false" [dataSource]='cbVendedor'   [fields]= 'localFielvendedor'></ejs-combobox>                                 
+                        </c-col>
+                        </c-row>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+
+<div class="row" style="margin-top: 10px;">
+    <div class="col-sm-12">
+
+        <div class="animate__animated animate__fadeIn">
+            <c-card class="mb-4">
+              <c-card-header>
+                Detalle Rutero
+              </c-card-header>
+              <c-card-body>  
+                <div class="control-section">
+                    <ejs-grid #grid id='MasterDetailsExport' [dataSource]='crutas' [toolbar]="toolbar" (commandClick)="commandClick($event)" [childGrid]="childGrid" [searchSettings]='searchSettings'>
+                        <e-columns>
+                            <e-column field='id_cab' headerText='Id' width='100' textAlign='center'></e-column>
+                            <e-column headerText="" width="150" [commands]="commands"></e-column>
+                            <e-column field='nvendedor' headerText='Vendedor' width='100' textAlign='left'></e-column>
+                            <e-column field='fecha' headerText='Fecha' width='130' format="yMd" textAlign='center'></e-column>
+                            <e-column field='observacion' headerText='Observación' width='150'></e-column>
+
+                        </e-columns>
+                    </ejs-grid>
+                </div>
+              </c-card-body>
+            </c-card>
+                    
+            </div>
+            </div>
+            </div>
+        </form>

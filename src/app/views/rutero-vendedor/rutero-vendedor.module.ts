@@ -9,7 +9,7 @@ import { FormularioRuteroComponent } from './formulario-rutero/formulario-rutero
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule, CardModule, FormModule, HeaderModule, SharedModule, UtilitiesModule , GridModule as GridCoreUI, NavModule, TabsModule} from '@coreui/angular';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { AggregateService, CommandColumnService, EditService, ExcelExportService, GridModule, GroupService, LazyLoadGroupService, PageService, PdfExportService, ResizeService, SearchService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, CommandColumnService, DetailRowService, EditService, ExcelExportService, GridModule, GroupService, LazyLoadGroupService, PageService, PdfExportService, ResizeService, SearchService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { ToolbarModule } from '@syncfusion/ej2-angular-navigations';
 import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
 
@@ -35,6 +35,6 @@ import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
   ],
   providers:[IconSetService,
     AggregateService, GroupService, EditService, ToolbarService, SortService, PageService,CommandColumnService,LazyLoadGroupService ,SearchService,ResizeService,
-    ExcelExportService,PdfExportService]
+    ExcelExportService,PdfExportService,DetailRowService]
 })
 export class RuteroVendedorModule { }

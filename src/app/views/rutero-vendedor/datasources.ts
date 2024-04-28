@@ -120,3 +120,67 @@ export let clientes = [
       telefono: "5454545454",
     }
 ];
+
+
+export let cab=[
+  {
+   id_cab: 1,
+    vendedor: "VMACIAS",
+    nvendedor:'VERONICA MACIAS',
+    fecha: "2024-04-27",  
+    observacion: "Se recuerda visitar al cliente en la mañana",     
+  },
+  {
+    id_cab: 2,
+     vendedor: "CLEON",
+     nvendedor:'CARLOS LEON',
+     fecha: "2024-04-27",  
+     observacion: "Se recuerda visitar al cliente",     
+   },
+ 
+
+];
+export let det=[
+  {
+   id_cab: 1,
+    vendedor: "VMACIAS",
+    cliente:'45',
+    ncliente:'PLASTIVIDA',
+    direccion:"Guasmo Sur",
+    fecha: "2024-04-27",  
+  },
+  {
+    id_cab: 1,
+     vendedor: "VMACIAS",
+     cliente:'47',
+     ncliente:'PLASTICO INTERNACIONAL',
+     direccion:"Guasmo Central",
+     fecha: "2024-04-27",  
+   }
+   , {
+    id_cab: 1,
+     vendedor: "VMACIAS",
+     cliente:'48',
+     ncliente:'PLASTICO HG',
+     direccion:"Mercado sur",
+     fecha: "2024-04-27",  
+   },
+   {
+    id_cab: 2,
+     vendedor: "CLEON",
+     cliente:'48',
+     ncliente:'RAUL ALVARADO',
+     direccion:"Centro de Quito",
+     fecha: "2024-04-27",  
+   },
+   {
+    id_cab: 2,
+     vendedor: "CLEON",
+     cliente:'49',
+     ncliente:'JUVENAL',
+     direccion:"Mercado Quito",
+     fecha: "2024-04-27",  
+   },
+ 
+
+];
