@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+const httpOptions = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,5 +20,13 @@ export class RuteroVendedorService {
   public DetRura(vendedor:string,dfecha:string,hfecha:string): Observable<any>{
     return this.httpClient.get<any>(`${this.apiURL+ '/druta'}/${vendedor}/${dfecha}/${hfecha}`);
   }
-
+  public GetSecuencial ():Observable<number>{
+    const purl= `${this.apiURL}/secuencial`;
+    return this.httpClient.get<number>(purl);  
+  }
+  public crearRuta (data : any):Observable<any>{
+    const purl= `${this.apiURL}/postRutas`;
+    return this.httpClient.post<any>(purl,data,httpOptions);
+  }
+ 
 }

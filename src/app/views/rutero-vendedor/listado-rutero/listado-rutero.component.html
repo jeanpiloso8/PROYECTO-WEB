@@ -2,6 +2,7 @@
     <ejs-toolbar height="25px"  width='100%'>
         <e-items>
             <e-item text='Nuevo'  prefixIcon='e-icons e-plus' overflow='Show' showTextOn='overflow' [routerLink]="['/ruterovendedor/nuevo']"></e-item>
+            <e-item text='Consultar' (click)="search()"  prefixIcon='e-icons e-search'  overflow='Show' showTextOn='overflow'></e-item>  
         </e-items>
     </ejs-toolbar>
 </div>   
@@ -52,7 +53,11 @@
                             <e-column field='id_cab' headerText='Id' width='100' textAlign='center'></e-column>
                             <e-column headerText="" width="150" [commands]="commands"></e-column>
                             <e-column field='nvendedor' headerText='Vendedor' width='100' textAlign='left'></e-column>
-                            <e-column field='fecha' headerText='Fecha' width='130' format="yMd" textAlign='center'></e-column>
+                            <e-column field='fecha' headerText='Fecha' width='130' textAlign='center'>
+                                <ng-template #template let-data>
+                                    {{ data.fecha | date: 'yyyy-MM-dd' }}
+                                </ng-template>
+                            </e-column>
                             <e-column field='observacion' headerText='Observación' width='150'></e-column>
 
                         </e-columns>

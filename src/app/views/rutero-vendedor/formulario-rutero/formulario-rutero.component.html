@@ -4,7 +4,7 @@
         <e-items>
             <e-item text='Nuevo' [disabled]="!estadoBotones.btnNuevo"  prefixIcon='e-icons e-justify' overflow='Show' showTextOn='overflow'></e-item>
             <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' showTextOn='overflow'></e-item>
-            <e-item text='Grabar' [disabled]="!estadoBotones.btnGrabar"  prefixIcon='e-icons e-save' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Grabar' [disabled]="!estadoBotones.btnGrabar"  prefixIcon='e-icons e-save' (click)="PosRutas()" overflow='Show' showTextOn='overflow'></e-item>
             <e-item text='Anular' [disabled]="!estadoBotones.btnAnular"  prefixIcon='e-icons e-trash' overflow='Show' showTextOn='overflow'></e-item>
             <e-item text='Cancelar' [disabled]="!estadoBotones.btnSalir" prefixIcon='e-icons e-undo' overflow='Show' showTextOn='overflow'></e-item>
         </e-items>

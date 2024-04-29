@@ -43,16 +43,8 @@ public pageOption: Object;
     this.pageOption = { pageCount: 5, pageSize: 15 };
     this.toolbar = ['Search'];
 
-    this.crutas=cab;
-    this.drutas=det;
-    this.childGrid = {
-      dataSource: this.drutas,
-      queryString: 'id_cab',
-      columns: [
-          { field: 'ncliente', headerText: 'Cliente', textAlign: 'Left', width: 100 },
-          { field: 'direccion', headerText: 'Dirección', width: 120 }
-      ]
-  };
+    this.Obtener("Todos",this.Form.controls.fechadesde.value,this.Form.controls.fechahasta.value);
+   
  
   }
   inicializar(){
@@ -68,27 +60,37 @@ public pageOption: Object;
     });
    // this.obtenerData(this.Form.controls.fechadesde.value,this.Form.controls.fechahasta.value,"");
   }
-  consulta(){
-    this.ruteroService.CabRura("Todos","2024-04-27","2024-04-27").subscribe({
+  search(){
+    const vendedorValue = this.Form.controls.vendedor.value;
+    const fechaDesdeValue = this.Form.controls.fechadesde.value;
+    const fechaHastaValue = this.Form.controls.fechahasta.value;
+
+    // Verificar si el campo vendedor está vacío y establecerlo en "Todos" si es así
+    const vendedor = vendedorValue ? vendedorValue : 'Todos';
+
+    this.Obtener(vendedor,fechaDesdeValue,fechaHastaValue);
+  }
+  Obtener(vendedor:string,dfecha:string,hfecha:string){
+    this.crutas=[];
+    this.drutas=[];
+    this.ruteroService.CabRura(vendedor,dfecha,hfecha).subscribe({
       next: (respuesta) => {
         if (respuesta.isSuccess)
-        {
-          
+        {        
           this.crutas = respuesta.result;
-          this.ruteroService.DetRura("Todos","2024-04-27","2024-04-27").subscribe({
-            next: (respuesta) => {
-              if (respuesta.isSuccess)
-              {
-                
-                this.drutas = respuesta.result;
-                console.log(this.crutas);
-                console.log(this.drutas);
-              }
-            },
-            error: (errores) => {
-              this.toastr.error(cadenaErrores(errores));
-            }
+          this.crutas.forEach(item => {
+            // Concatenar los rutasDetalles del elemento actual al arreglo de todos los rutasDetalles
+            this.drutas.push(...item.rutasDetalles);
           });
+            console.log(this.drutas);
+          this.childGrid = {
+            dataSource: this.drutas,
+            queryString: 'id_cab',
+            columns: [
+                { field: 'ncliente', headerText: 'Cliente', textAlign: 'Left', width: 100 },
+                { field: 'direccion', headerText: 'Dirección', width: 120 }
+            ]
+        };
         }
       },
       error: (errores) => {
@@ -97,6 +99,8 @@ public pageOption: Object;
     });
   }
   
+
+
   public commandClick(args: any): void {
 
     if (args.commandColumn.title && args.commandColumn.title === 'Modificar') {
@@ -109,4 +113,6 @@ public pageOption: Object;
       console.log(Id);
     }
   }
+
+ 
 }
