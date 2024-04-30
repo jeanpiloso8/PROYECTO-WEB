@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { RuteroVendedorRoutingModule } from './rutero-vendedor-routing.module';
 import { ListadoRuteroComponent } from './listado-rutero/listado-rutero.component';
@@ -35,6 +35,6 @@ import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
   ],
   providers:[IconSetService,
     AggregateService, GroupService, EditService, ToolbarService, SortService, PageService,CommandColumnService,LazyLoadGroupService ,SearchService,ResizeService,
-    ExcelExportService,PdfExportService,DetailRowService]
+    ExcelExportService,PdfExportService,DetailRowService,DatePipe]
 })
 export class RuteroVendedorModule { }

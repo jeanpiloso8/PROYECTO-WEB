@@ -2,11 +2,11 @@
 <div class="right-z-index-top-toolbar">
     <ejs-toolbar height="25px"  width='100%'>
         <e-items>
-            <e-item text='Nuevo' [disabled]="!estadoBotones.btnNuevo"  prefixIcon='e-icons e-justify' overflow='Show' showTextOn='overflow'></e-item>
-            <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Nuevo' [disabled]="!estadoBotones.btnNuevo"  prefixIcon='e-icons e-justify' overflow='Show' (click)="nuevo()" showTextOn='overflow'></e-item>
+            <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' (click)="modificar()" showTextOn='overflow'></e-item>
             <e-item text='Grabar' [disabled]="!estadoBotones.btnGrabar"  prefixIcon='e-icons e-save' (click)="PosRutas()" overflow='Show' showTextOn='overflow'></e-item>
             <e-item text='Anular' [disabled]="!estadoBotones.btnAnular"  prefixIcon='e-icons e-trash' overflow='Show' showTextOn='overflow'></e-item>
-            <e-item text='Cancelar' [disabled]="!estadoBotones.btnSalir" prefixIcon='e-icons e-undo' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Cancelar' [disabled]="!estadoBotones.btnSalir" prefixIcon='e-icons e-undo' overflow='Show' (click)="Cancelar()" showTextOn='overflow'></e-item>
         </e-items>
     </ejs-toolbar>
 </div>   
@@ -25,7 +25,7 @@
                     <c-row class="mt-2">
                         <c-col lg="4">
                             <label cLabel>N°Documento</label>
-                            <input cFormControl id="ndocumento" formControlName="ndocumento" sizing="sm" type="text">
+                            <input cFormControl id="ndocumento" (keydown.enter)="EnterConsulta()" formControlName="ndocumento" sizing="sm" type="text">
                            
                         </c-col>
                         <c-col lg="4">
@@ -58,7 +58,7 @@
                 <c-nav variant="tabs">
                     <c-nav-item> 
                       <a  [cTabContent]="tabContent2" cNavLink [routerLink] [tabPaneIdx]="0">        
-                        <button type="button" class="btn btn-primary btn-sm" (click)="btnNuevoProducto()"> 
+                        <button type="button" [disabled]="!estadoBotones.btnAgregar" class="btn btn-primary btn-sm" (click)="btnNuevoProducto()"> 
                             <svg [cIcon]="icons.cilPlus" size="lg" title="List Icon" class="mr-2"></svg>&nbsp; Agregar Producto </button>
                     </a>
                     </c-nav-item>
@@ -77,7 +77,7 @@
                                           <th class="padding-lt-5"style="min-width: 100px; text-align:center;">Teléfono</th>                                     
                                         </tr></thead>   
                                         <ng-container *ngFor="let detalle of detalleRutas; let idx = index;">
-                                        <tr formGroupName="{{ detalle.cnoFormulario }}">
+                                        <tr formGroupName="{{ detalle.cnoFormulario }}" *ngIf="detalle.estado !== 'Delete'">
                                             <td>
                                                 <button type="button" style="color: red;"
                                                 (click)="eliminarFilaDetalleFn(idx)"
@@ -88,6 +88,7 @@
                                             <td><ejs-combobox autofocus  id='comboelement'  
                                               [dataSource]='cbcliente'  [fields]= 'localFieldsCliente' formControlName="codigo_cliente" placeholder = 'Seleccionar Cliente'  [noRecordsTemplate]="noRecordsTemplate"
                                               [allowCustom]="false"
+                                              [readonly]="!estadoBotones.controlTable"
                                               title="Debe seleccionar un cliente"
                                               (ngModelChange)="onNgModelChange($event,idx)"
                                               (keyup.enter)="enfocarSiguienteCelda(0,idx)"

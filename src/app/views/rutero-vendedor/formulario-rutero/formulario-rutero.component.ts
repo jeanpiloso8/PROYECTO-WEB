@@ -11,6 +11,8 @@ import {FormularioDetalle } from './../models/Formulario';
 import { RuteroVendedorService } from '../rutero-vendedor.service';
 import { firstValueFrom } from 'rxjs';
 import {parsearErrores} from '../../../shared-features/utilities/parsearErrores'
+import Swal from 'sweetalert2';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-formulario-rutero',
   templateUrl: './formulario-rutero.component.html',
@@ -26,6 +28,7 @@ export class FormularioRuteroComponent implements OnInit {
   cbcliente:any[]=[];
   FormTable: any;
   Form:any;
+  anulado :string="";
   public localFieldsVendedor: Object = { text: 'nombre', value: 'codigo' };
   public localFieldsCliente: Object = { text: 'nombre', value: 'codigo' };
   public detalleRutas: DetRuta[] = [];
@@ -40,12 +43,16 @@ export class FormularioRuteroComponent implements OnInit {
     btnGrabar: false, // Suponiendo que quieres que este esté deshabilitado inicialmente
     btnAnular: false,
     btnSalir: false,
+    btnAgregar: false,
+    controlTable:false,
   };
-  constructor(private fb: FormBuilder, private toastr: ToastrService,private validationService:FormValidationService){}
+  constructor(private fb: FormBuilder, private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
   ngOnInit(): void {
+    this.accion=TipoAccion.Read;
     this.cbvendedor=vendedor;
     this.cbcliente=clientes
     this.inicializar();
+    this.limpiar();
     this.barraBotones();
   }
 
@@ -86,15 +93,195 @@ export class FormularioRuteroComponent implements OnInit {
       this.estadoBotones.btnNuevo = true;
       this.estadoBotones.btnModificar = true;
       this.estadoBotones.btnAnular = true;
+      this.estadoBotones.btnAgregar=false;
+      this.estadoBotones.controlTable=false;
       this.estadoBotones.btnGrabar = false;
+      this.Form.get('ndocumento')?.enable();
+      this.Form.get('vendedor')?.disable();
+      this.Form.get('fecha')?.disable();
+      this.Form.get('descripcion')?.disable();
     }
     else if (this.accion == TipoAccion.Create || this.accion == TipoAccion.Update){
       this.estadoBotones.btnNuevo = false;
       this.estadoBotones.btnModificar = false;
       this.estadoBotones.btnAnular = false;
+      this.estadoBotones.btnAgregar=true;
+      this.estadoBotones.controlTable=true;
       this.estadoBotones.btnGrabar = true;
+      this.Form.get('ndocumento')?.disable();
+      this.Form.get('vendedor')?.enable();
+      this.Form.get('fecha')?.enable();
+      this.Form.get('descripcion')?.enable();
     }
   }
+  async nuevo() {
+
+    try
+    {
+      this.accion = TipoAccion.Create;
+      this.limpiar();
+      await this.obtenerSecuencial();
+      this.barraBotones();
+    }
+    catch (error) {
+      this.errores = parsearErrores(error);
+      const mensajeError = this.errores.join(', ');
+      this.toastr.error(mensajeError);
+    }
+  }
+  async modificar() {
+
+    try{
+         const id = this.Form.controls.ndocumento.value;
+         let consulta = await this.consultar(id);
+   
+         if (consulta) {
+           if(this.anulado !== "AN"){
+             this.accion = TipoAccion.Update;
+             this.barraBotones();
+           }else{
+             this.toastr.error('Registro se encuentra anulado');
+           }
+   
+         }
+       } catch (error) {
+         this.errores = parsearErrores(error);
+         const mensajeError = this.errores.join(', ');
+         this.toastr.error(mensajeError);
+       }
+   
+     }
+  Cancelar() {
+    if (this.accion == TipoAccion.Read) {
+      this.obtenerSecuencial();
+      this.limpiar();
+      this.barraBotones();
+      // cerramos la ventana
+    }
+    else if (this.accion == TipoAccion.Create || this.accion == TipoAccion.Update) {
+      Swal.fire({
+        title: "Seguro desea Cancelar Transacción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.accion = TipoAccion.Read;
+          this.limpiar();
+          this.barraBotones();
+
+        }
+      });
+    }
+  }
+  limpiar() {
+
+    this.detalleRutas = [];
+    const currentDate = new Date().toISOString().split('T')[0];
+    if (this.accion != TipoAccion.Read) {
+      this.Form.patchValue({
+        ndocumento: "",
+      });
+    }
+    this.Form.patchValue({
+      vendedor: "",
+      descripcion: "",
+      fecha: currentDate
+    });
+    this.FormTable = this.fb.group({
+      cliente:  ["", [Validators.required]]
+     });
+    }
+    EnterConsulta(){
+      const id = this.Form.controls.ndocumento.value;
+      this.consultar(id);
+    }
+
+    async consultar(id:string) {
+      let result: boolean = true;
+      // Suponiendo que 'id' es el identificador que necesitas para verificar si el documento existe
+  
+      this.accion = TipoAccion.Read;
+      this.limpiar();
+     
+      
+      // Espera el resultado de existe_documento
+      try{
+  
+        if(id != null  && id != "" && id != undefined){
+  
+         const existe = await this.existe_documento(id);
+          if (!existe) {
+            //this.toastr.info('no existe documento con secuencia ingresada');
+            result = false;
+          }
+        }else{
+          this.toastr.info('no existe numero documento');
+          result = false;
+        }
+        this.barraBotones();
+      }catch(errores){
+        throw errores;
+      }
+      return result;
+    }
+
+  existe_documento(id: string): Promise<boolean> {
+    //this.cbcliente=[];
+    let idx: number = 0;
+    this.anulado = "";
+    return new Promise((resolve, reject) => {
+      this.ruteroService.DetRutaID(id).subscribe({
+        next: (data) => {
+          if (data.result) {
+            resolve(true);
+            this.Form.patchValue({
+              ndocumeto: data.result.id_cab,
+              vendedor: data.result.vendedor,
+              descripcion: data.result.observacion,
+              fecha: data.result.fecha != undefined ? this.datePipe.transform(new Date(data.result.fecha), 'yyyy-MM-dd') : ""
+            });
+            this.anulado = data.result.estado;
+            data.result.rutasDetalles.forEach((element: any, index: number) => {
+              const name = this.detalleFila + index;
+              element.cnoFormulario = name;
+              //element.codigo_producto = element.codigo_producto;
+
+              this.inicializarFromTable(name);
+            });
+            this.detalleRutas = data.result.rutasDetalles;
+            idx = 0;
+            this.detalleRutas.forEach(detalle => {
+              const nombreForm = detalle.cnoFormulario;
+              const client = detalle.cliente;
+              const nclient = detalle.ncliente;
+              ///this.cbcliente.push({ codigo: client, name: nclient });
+
+              this.FormTable.get(nombreForm).get('codigo_cliente').patchValue(client);
+
+              detalle.estado = "Read";
+              //  this.agregarAtributoProductoFn(idx);
+              idx = idx + 1;
+
+            });
+          } else {
+            resolve(false);
+          }
+        },
+        error: (error) => {
+          resolve(false);
+          this.errores = parsearErrores(error);
+          const mensajeError = this.errores.join(', ');
+          this.toastr.error(mensajeError);
+        }
+      });
+
+    });
+  }
+
   obtenerError(campoNombre: string): string {
     const campo = this.Form.get(campoNombre);
     return campo ? this.validationService.obtenerMensajeError(campo) : '';
@@ -234,7 +421,6 @@ btnNuevoProducto() {
 
   async PosRutas(){
     if(this.Form.valid){
-      await this.obtenerSecuencial();
       this.detalleRutas = this.detalleRutas.filter((item:any) => item.cliente !== "");
       try{
         if (this.detalleRutas.length === 0 ) {
@@ -261,7 +447,7 @@ btnNuevoProducto() {
           estado : estadoCab,
           RutasDetalles: this.detalleRutas,         
         }
-        console.log(cab);
+       // console.log(cab);
         this.ruteroService.crearRuta(cab).subscribe({
           next: (respuesta) => {
             if(this.accion == TipoAccion.Create){
@@ -271,8 +457,8 @@ btnNuevoProducto() {
             }else if(this.accion == TipoAccion.Delete){
               this.toastr.error('Registro Eliminado Correctamente');
             }
-      
-           // this.consultar();
+            const id = this.Form.controls.ndocumento.value;
+            this.consultar(id);
           },
           error: (error) => {
       

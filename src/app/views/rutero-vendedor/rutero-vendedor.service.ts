@@ -17,8 +17,11 @@ export class RuteroVendedorService {
   public CabRura(vendedor:string,dfecha:string,hfecha:string): Observable<any>{
     return this.httpClient.get<any>(`${this.apiURL+ '/cruta'}/${vendedor}/${dfecha}/${hfecha}`);
   }
-  public DetRura(vendedor:string,dfecha:string,hfecha:string): Observable<any>{
+  public DetRuta(vendedor:string,dfecha:string,hfecha:string): Observable<any>{
     return this.httpClient.get<any>(`${this.apiURL+ '/druta'}/${vendedor}/${dfecha}/${hfecha}`);
+  }
+  public DetRutaID(id:string): Observable<any>{
+    return this.httpClient.get<any>(`${this.apiURL+ '/rutaid'}/${id}`);
   }
   public GetSecuencial ():Observable<number>{
     const purl= `${this.apiURL}/secuencial`;
