@@ -11,4 +11,12 @@ export let vendedor = [
         codigo: "SUPERVISOR",
         nombre: "SUPERVISOR",
       },
+      {
+        codigo: "CLEON",
+        nombre: "CARLOS LEON",
+      },
+      {
+        codigo: "AMACIAS",
+        nombre: "AMPARO MACIAS",
+      },
   ];

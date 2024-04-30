@@ -89,7 +89,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements AfterView
    private readonly modalService = inject(NgbModal);
    private readonly toastr = inject(ToastrService);
    private readonly modalStateService = inject(ModalStateService);
-   public data: string[] = ['EXPALSA', 'LATAMFOODS', 'BLACKBEAUTY'];
 
   constructor(private renderer: Renderer2,
              @Inject(DOCUMENT) private document: Document) {

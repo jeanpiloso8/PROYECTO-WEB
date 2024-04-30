@@ -74,7 +74,8 @@ inicializar(){
       
     this.service.obtener(body).subscribe(data => {
       if(JSON.stringify(data) != '"No Existe"'){
-        this.datos = data;
+        this.datos = data.filter((item: any) => item.motivo !== "PROFORMA" && item.motivo !== "ENVIO PROFORMA");
+       // console.log(this.datos);
       }
      
    

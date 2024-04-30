@@ -22,8 +22,10 @@ export class FormularioRuteroComponent implements OnInit {
   icons = { cilPlus,cilTrash };
   @Input() errores: string[] = [];
   @Input() accion! :TipoAccion;
+  @Input() idRuta: number;
   private readonly ruteroService = inject(RuteroVendedorService);
   titulo:string;
+  id:number;
   cbvendedor:any[]=[];
   cbcliente:any[]=[];
   FormTable: any;
@@ -48,7 +50,7 @@ export class FormularioRuteroComponent implements OnInit {
   };
   constructor(private fb: FormBuilder, private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
   ngOnInit(): void {
-    this.accion=TipoAccion.Read;
+    //this.accion=TipoAccion.Read;
     this.cbvendedor=vendedor;
     this.cbcliente=clientes
     this.inicializar();
@@ -77,6 +79,8 @@ export class FormularioRuteroComponent implements OnInit {
           await this.obtenerSecuencial();
          }else{
           this.titulo="Modificar Rutas";
+          this.id = this.idRuta;
+          console.log(this.accion);
          }
 
 

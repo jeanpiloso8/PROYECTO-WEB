@@ -12,14 +12,14 @@ import { ToastrService } from 'ngx-toastr';
 export class ListadoAudioComponent implements OnInit {
   @Input() modelo: any;
   @Input() id: any;
-  private readonly activeModal = inject(NgbActiveModal);
+  private readonly activeModal = inject(NgbActiveModal); 
   public toolbar?: ToolbarItems[] | object;
   public commands?: CommandModel[];
   public usernamerules = { required: true };
   public editparams = { params: { popupHeight: '500px' }};
   public pageOption: Object;
  dataImg : DetMultimedia[] = [];
- constructor(private toastr: ToastrService){
+ constructor(private toastr: ToastrService){ 
 
  }
   ngOnInit(): void {

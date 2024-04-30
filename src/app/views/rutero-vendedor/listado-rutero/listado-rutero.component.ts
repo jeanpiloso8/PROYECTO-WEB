@@ -7,6 +7,8 @@ import { CommandModel, GridModel, SearchSettingsModel, ToolbarItems } from '@syn
 import { cilSearch,cilPlus } from '@coreui/icons';
 import { vendedor } from '../../visitas-vendedor/datasources';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TipoAccion } from 'src/app/shared-features/enums/TipoAccion';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-listado-rutero',
   templateUrl: './listado-rutero.component.html',
@@ -30,6 +32,8 @@ public pageOption: Object;
   fechadesde = new FormControl('', {validators: [Validators.required]});
   fechahasta = new FormControl('', {validators: [Validators.required]});
   vendedor = new FormControl('', {validators: [Validators.required]});
+  public accion = TipoAccion.Read;
+  private readonly router = inject(Router);
   constructor(){}
   ngOnInit(): void {
     this.inicializar();
@@ -82,7 +86,7 @@ public pageOption: Object;
             // Concatenar los rutasDetalles del elemento actual al arreglo de todos los rutasDetalles
             this.drutas.push(...item.rutasDetalles);
           });
-            console.log(this.drutas);
+            
           this.childGrid = {
             dataSource: this.drutas,
             queryString: 'id_cab',
@@ -104,15 +108,18 @@ public pageOption: Object;
   public commandClick(args: any): void {
 
     if (args.commandColumn.title && args.commandColumn.title === 'Modificar') {
-      const Id = args.rowData.codigo;
-      console.log(Id);
-      //this.router.navigate(['/cotizacion/modificar']);
+      const Id = args.rowData.id_cab;
+      this.modificar(Id);
     }
     else if (args.commandColumn.title && args.commandColumn.title === 'Eliminar') {
-      const Id = args.rowData.codigo;
+      const Id = args.rowData.id_cab;
       console.log(Id);
     }
   }
 
- 
+  modificar(Id:number){
+    this.router.navigate(['/ruterovendedor/modifica', Id]);
+    
+  }
+
 }

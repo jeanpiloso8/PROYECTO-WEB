@@ -34,10 +34,10 @@ const routes: Routes = [
       }
       ,
       {
-        path: 'modifica',
+        path: 'modifica/:id',
         component: ModificaRuteroComponent,
         data: {
-          title: 'Modifica'
+          title: 'Modificar'
         }
       }
       ,
