@@ -6,6 +6,7 @@ import { ListadoRuteroComponent } from './listado-rutero/listado-rutero.componen
 import { ModificaRuteroComponent } from './modifica-rutero/modifica-rutero.component';
 import { NuevoRuteroComponent } from './nuevo-rutero/nuevo-rutero.component';
 import { FormularioRuteroComponent } from './formulario-rutero/formulario-rutero.component';
+import { VisualizarRuteroComponent } from './visualizar-rutero/visualizar-rutero.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule, CardModule, FormModule, HeaderModule, SharedModule, UtilitiesModule , GridModule as GridCoreUI, NavModule, TabsModule} from '@coreui/angular';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
@@ -14,7 +15,7 @@ import { ToolbarModule } from '@syncfusion/ej2-angular-navigations';
 import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
 
 @NgModule({
-  declarations: [ListadoRuteroComponent,NuevoRuteroComponent,ModificaRuteroComponent,FormularioRuteroComponent],
+  declarations: [ListadoRuteroComponent,NuevoRuteroComponent,ModificaRuteroComponent,FormularioRuteroComponent,VisualizarRuteroComponent],
   imports: [
     CommonModule,
     RuteroVendedorRoutingModule,

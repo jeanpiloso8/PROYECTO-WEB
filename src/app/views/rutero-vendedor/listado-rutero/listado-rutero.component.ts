@@ -9,6 +9,7 @@ import { vendedor } from '../../visitas-vendedor/datasources';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoAccion } from 'src/app/shared-features/enums/TipoAccion';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-listado-rutero',
   templateUrl: './listado-rutero.component.html',
@@ -38,7 +39,7 @@ public pageOption: Object;
   ngOnInit(): void {
     this.inicializar();
     this.cbVendedor=vendedor;
-    this.commands = [{ buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-eye' }, title: 'PDF' },
+    this.commands = [{ buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-eye' }, title: 'Ver' },
     { buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-edit' }, title: 'Modificar' },
     { buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-delete' }, title: 'Eliminar' },
     ];
@@ -113,7 +114,31 @@ public pageOption: Object;
     }
     else if (args.commandColumn.title && args.commandColumn.title === 'Eliminar') {
       const Id = args.rowData.id_cab;
-      console.log(Id);
+      //console.log(args.rowData.id_cab);
+      Swal.fire({
+        title: "Seguro desea Anular Transacción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.ruteroService.AnularRutaID(Id).subscribe({
+            next: (respuesta) => {
+              this.toastr.success('Registro Anulado Correctamente');
+              this.search();
+            },
+            error: (errores) => {
+              this.toastr.error(cadenaErrores(errores));
+            }
+          });
+        }
+      });  
+    }else if (args.commandColumn.title && args.commandColumn.title === 'Ver'){
+      const Id = args.rowData.id_cab;
+      this.Ver(Id);
     }
   }
 
@@ -121,5 +146,8 @@ public pageOption: Object;
     this.router.navigate(['/ruterovendedor/modifica', Id]);
     
   }
-
+  Ver(Id:number){
+    this.router.navigate(['/ruterovendedor/visualizar', Id]);
+    
+  }
 }

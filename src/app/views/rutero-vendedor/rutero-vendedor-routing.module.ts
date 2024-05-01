@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListadoRuteroComponent } from './listado-rutero/listado-rutero.component';
 import { ModificaRuteroComponent } from './modifica-rutero/modifica-rutero.component';
 import { NuevoRuteroComponent } from './nuevo-rutero/nuevo-rutero.component';
+import { VisualizarRuteroComponent } from './visualizar-rutero/visualizar-rutero.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,13 @@ const routes: Routes = [
         }
       }
       ,
+      {
+        path: 'visualizar/:id',
+        component: VisualizarRuteroComponent,
+        data: {
+          title: 'Visualizar'
+        }
+      }
     ]
     }
 ];

@@ -5,6 +5,8 @@ export class CabRuta{
     nvendedor? : string;
     estado? : string; 
     observacion? : string; 
+    usuario_crea?:string;
+    usuario_modifica?:string
     RutasDetalles?: DetRuta[];
    }
    export class DetRuta  {
@@ -15,5 +17,7 @@ export class CabRuta{
    direccion?:string;
    telefono?: string;
    estado? :string;
+   usuario_crea?:string;
+   usuario_modifica?:string
    cnoFormulario?: string;
    }

@@ -31,5 +31,8 @@ export class RuteroVendedorService {
     const purl= `${this.apiURL}/postRutas`;
     return this.httpClient.post<any>(purl,data,httpOptions);
   }
+  public AnularRutaID(id:string): Observable<any>{
+    return this.httpClient.post<any>(`${this.apiURL+ '/postAnularRutas'}/${id}`,httpOptions);
+  }
  
 }

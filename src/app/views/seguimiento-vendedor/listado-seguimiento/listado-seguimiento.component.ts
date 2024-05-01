@@ -3,6 +3,7 @@ import { cilSearch,cilPlus } from '@coreui/icons';
 import { ServiceService } from '../../seguimiento-vendedor/service.service';
 import { CommandModel, ToolbarItems, GridComponent, PdfQueryCellInfoEventArgs, ExcelQueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
 import { ClickEventArgs } from '@syncfusion/ej2-navigations';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-listado-seguimiento',
   templateUrl: './listado-seguimiento.component.html',
@@ -18,7 +19,7 @@ export class ListadoSeguimientoComponent implements OnInit {
   public pageOption: Object;
   public isInitial: Boolean = true;
   @ViewChild('grid') public grid: GridComponent;
-  constructor(private service : ServiceService){}
+  constructor(private service : ServiceService,private toastr: ToastrService){}
 ngOnInit(): void {
   this.commands = [{ buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-location'}, title:'Ubicacion' },
   ];
@@ -47,10 +48,16 @@ ngOnInit(): void {
 
     if (args.commandColumn.title && args.commandColumn.title=== 'Ubicacion')
     {
+
       console.log(args.rowData);
-      const titulo = 'Ubicación';
-      const url = `https://www.google.com/maps?q=${args.rowData.latitud},${args.rowData.longitud}&output=embed&t=${titulo}`;
-      window.open(url, "Diseño Web", "_blank");
+      if(args.rowData.latitud !="GPS Desactivado"){
+        const titulo = 'Ubicación';
+        const url = `https://www.google.com/maps?q=${args.rowData.latitud},${args.rowData.longitud}&output=embed&t=${titulo}`;
+        window.open(url, "Diseño Web", "_blank");
+      }else{
+        this.toastr.info('Vendedor tiene el GPS DESACTIVADO');
+      }
+    
     }
   }
   dataBound() {

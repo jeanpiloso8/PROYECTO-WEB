@@ -14,6 +14,7 @@ import {parsearErrores} from '../../../shared-features/utilities/parsearErrores'
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
 @Component({
   selector: 'app-formulario-rutero',
   templateUrl: './formulario-rutero.component.html',
@@ -51,7 +52,7 @@ export class FormularioRuteroComponent implements OnInit {
     btnAgregar: false,
     controlTable:false,
   };
-  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef ,private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
+  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private securityService: SecurityService ,private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
   ngOnInit(): void {
     //this.accion=TipoAccion.Read;
     this.cbvendedor=vendedor;
@@ -79,9 +80,16 @@ export class FormularioRuteroComponent implements OnInit {
           this.titulo="Registrar Rutas";
           await this.obtenerSecuencial();
          }else{
-          this.titulo="Modificar Rutas";
-          this.id = this.idRuta;
-          await this.modificar(this.id.toString());
+          if(this.accion == TipoAccion.Update){
+            this.titulo="Modificar Rutas";
+            this.id = this.idRuta;
+            await this.modificar(this.id.toString());
+          }else{
+            this.titulo="Rutas";
+            this.id = this.idRuta;
+            await this.consultar(this.id.toString());
+          }
+          
           
          }
       }catch (error) {
@@ -312,6 +320,7 @@ export class FormularioRuteroComponent implements OnInit {
     }else{
       if(this.accion == TipoAccion.Update){
         this.detalleRutas[idx].estado ="Delete";
+        this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
       }
     }
   }
@@ -345,6 +354,7 @@ export class FormularioRuteroComponent implements OnInit {
     let estado = this.detalleRutas[idx].estado;
    if(estado == "Read"){
       this.detalleRutas[idx].estado ="Update";
+      this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
     }
     switch (celda) {
 
@@ -352,7 +362,7 @@ export class FormularioRuteroComponent implements OnInit {
        const duplicado = this.detalleRutas.filter( c => c.cliente == $event.itemData.codigo && c.estado !== "Delete");
      
         if (duplicado.length > 0 ){
-          this.toastr.warning(`Código ${$event.itemData.codigo} ya se encuentra en el listado.`, 'Información del Sistema');
+          this.toastr.warning(`Cliente ${$event.itemData.nombre} ya se encuentra en el listado.`, 'Información del Sistema');
             this.FormTable.get(this.detalleRutas[idx].cnoFormulario).get(celda).patchValue('');//da error xq el tipo de dato es number
 
         }else{
@@ -390,7 +400,8 @@ btnNuevoProducto() {
      const detalle: DetRuta = { ... new DetRuta() }
      detalle.cnoFormulario = this.ValidarNameFila(name);
      detalle.cliente ="";
-    detalle.vendedor=this.Form.controls.vendedor.value;
+     detalle.vendedor=this.Form.controls.vendedor.value;
+     detalle.usuario_crea=this.securityService.getUserName();
      let idcab =0;
      if(this.accion == TipoAccion.Create) idcab= 0; else idcab =0 ;//caso contrario secuencial
      detalle.id_cab = idcab;
@@ -445,6 +456,7 @@ btnNuevoProducto() {
         }
         let idcab = 0;
         let estadoCab = "A";
+        let usuarioModifica= null;
         let observ = this.Form.controls.descripcion.value;
         if (this.accion == TipoAccion.Create) {
           idcab = 0;
@@ -461,8 +473,10 @@ btnNuevoProducto() {
           nvendedor:nvendedor.nombre,
           observacion: observ,
           estado : estadoCab,
+          usuario_crea:this.securityService.getUserName(),
           RutasDetalles: this.detalleRutas,         
         }
+        console.log(cab);
         this.ruteroService.crearRuta(cab).subscribe({
           next: (respuesta) => {
             if(this.accion == TipoAccion.Create){
@@ -491,7 +505,21 @@ btnNuevoProducto() {
     }
   }
   anularRutas(){
-    this.accion = TipoAccion.Delete;
-    this.PosRutas();
+    Swal.fire({
+      title: "Seguro desea Anular Transacción",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+      cancelButtonText: "No"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.accion = TipoAccion.Delete;
+        this.PosRutas()
+      }
+    });
+
+   ;
   }
 }
