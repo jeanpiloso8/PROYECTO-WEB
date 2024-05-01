@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { TipoAccion } from 'src/app/shared-features/enums/TipoAccion';
 import { vendedor } from '../../visitas-vendedor/datasources';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
 import {parsearErrores} from '../../../shared-features/utilities/parsearErrores'
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-formulario-rutero',
   templateUrl: './formulario-rutero.component.html',
@@ -35,6 +36,8 @@ export class FormularioRuteroComponent implements OnInit {
   public localFieldsCliente: Object = { text: 'nombre', value: 'codigo' };
   public detalleRutas: DetRuta[] = [];
   public detalleFila: string = 'detalleFila';
+  @ViewChild('ndocumento') ndocumentoInput: ElementRef;
+  private readonly router = inject(Router);
   ndocumento = new FormControl('', {validators: [Validators.required]});
   vendedor =  new FormControl('', {validators: [Validators.required, Validators.minLength(2)]});
   fecha = new FormControl('', {validators: [Validators.required, Validators.minLength(2)]});
@@ -48,13 +51,12 @@ export class FormularioRuteroComponent implements OnInit {
     btnAgregar: false,
     controlTable:false,
   };
-  constructor(private fb: FormBuilder, private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
+  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef ,private toastr: ToastrService,private validationService:FormValidationService,private datePipe: DatePipe){}
   ngOnInit(): void {
     //this.accion=TipoAccion.Read;
     this.cbvendedor=vendedor;
     this.cbcliente=clientes
     this.inicializar();
-    this.limpiar();
     this.barraBotones();
   }
 
@@ -72,18 +74,16 @@ export class FormularioRuteroComponent implements OnInit {
         this.FormTable = this.fb.group({
           codigo_cliente: ["", [Validators.required]],
          });
-
-
+         this.limpiar();
          if(this.accion == TipoAccion.Create){
           this.titulo="Registrar Rutas";
           await this.obtenerSecuencial();
          }else{
           this.titulo="Modificar Rutas";
           this.id = this.idRuta;
-          console.log(this.accion);
+          await this.modificar(this.id.toString());
+          
          }
-
-
       }catch (error) {
       this.errores = parsearErrores(error);
       const mensajeError = this.errores.join(', ');
@@ -91,6 +91,7 @@ export class FormularioRuteroComponent implements OnInit {
     }
       
   }
+ 
   barraBotones(){
     this.estadoBotones.btnSalir = true;
     if (this.accion == TipoAccion.Read){
@@ -133,14 +134,15 @@ export class FormularioRuteroComponent implements OnInit {
       this.toastr.error(mensajeError);
     }
   }
-  async modificar() {
+  async modificar(id:string) {
 
     try{
-         const id = this.Form.controls.ndocumento.value;
+        
+
          let consulta = await this.consultar(id);
    
          if (consulta) {
-           if(this.anulado !== "AN"){
+           if(this.anulado !== "I"){
              this.accion = TipoAccion.Update;
              this.barraBotones();
            }else{
@@ -153,13 +155,13 @@ export class FormularioRuteroComponent implements OnInit {
          const mensajeError = this.errores.join(', ');
          this.toastr.error(mensajeError);
        }
-   
+       this.cdr.detectChanges();
+
      }
   Cancelar() {
     if (this.accion == TipoAccion.Read) {
-      this.obtenerSecuencial();
-      this.limpiar();
-      this.barraBotones();
+      this.router.navigate(['/ruterovendedor']);
+
       // cerramos la ventana
     }
     else if (this.accion == TipoAccion.Create || this.accion == TipoAccion.Update) {
@@ -173,14 +175,13 @@ export class FormularioRuteroComponent implements OnInit {
         cancelButtonText: "No"
       }).then((result) => {
         if (result.isConfirmed) {
-          this.accion = TipoAccion.Read;
-          this.limpiar();
-          this.barraBotones();
-
+          this.router.navigate(['/ruterovendedor']);
         }
       });
     }
   }
+
+
   limpiar() {
 
     this.detalleRutas = [];
@@ -202,6 +203,12 @@ export class FormularioRuteroComponent implements OnInit {
     EnterConsulta(){
       const id = this.Form.controls.ndocumento.value;
       this.consultar(id);
+      this.cdr.detectChanges();
+    }
+    ClickModificar(){
+      const id = this.Form.controls.ndocumento.value;
+      this.modificar(id);
+      this.cdr.detectChanges();
     }
 
     async consultar(id:string) {
@@ -218,6 +225,8 @@ export class FormularioRuteroComponent implements OnInit {
         if(id != null  && id != "" && id != undefined){
   
          const existe = await this.existe_documento(id);
+         this.cdr.detectChanges();
+
           if (!existe) {
             //this.toastr.info('no existe documento con secuencia ingresada');
             result = false;
@@ -242,9 +251,11 @@ export class FormularioRuteroComponent implements OnInit {
         next: (data) => {
           if (data.result) {
             resolve(true);
+            this.Form.get("ndocumento").patchValue(data.result.id_cab);//da error xq el tipo de dato es number
+            this.ndocumentoInput.nativeElement.value =data.result.id_cab;
             this.Form.patchValue({
-              ndocumeto: data.result.id_cab,
-              vendedor: data.result.vendedor,
+               ndocumeto: data.result.id_cab,
+               vendedor: data.result.vendedor,
               descripcion: data.result.observacion,
               fecha: data.result.fecha != undefined ? this.datePipe.transform(new Date(data.result.fecha), 'yyyy-MM-dd') : ""
             });
@@ -405,6 +416,7 @@ btnNuevoProducto() {
      
      this.detalleRutas.push(detalle);
    }
+   this.cdr.detectChanges();
     }else{
       this.toastr.warning("Debe seleccionar vendedor","Error");
     }
@@ -447,11 +459,10 @@ btnNuevoProducto() {
           fecha: this.Form.controls.fecha.value,
           vendedor: this.Form.controls.vendedor.value,
           nvendedor:nvendedor.nombre,
-          observacion: this.Form.controls.descripcion.value,
+          observacion: observ,
           estado : estadoCab,
           RutasDetalles: this.detalleRutas,         
         }
-       // console.log(cab);
         this.ruteroService.crearRuta(cab).subscribe({
           next: (respuesta) => {
             if(this.accion == TipoAccion.Create){
@@ -478,5 +489,9 @@ btnNuevoProducto() {
     }else{
       this.toastr.warning('Debe llenar todos los campos', 'Rutas', { timeOut: 2000 });
     }
+  }
+  anularRutas(){
+    this.accion = TipoAccion.Delete;
+    this.PosRutas();
   }
 }

@@ -8,7 +8,7 @@ export class CabRuta{
     RutasDetalles?: DetRuta[];
    }
    export class DetRuta  {
-id_cab? : number;
+   id_cab? : number;
    vendedor?: string;
    cliente?: string;
    ncliente?:string;

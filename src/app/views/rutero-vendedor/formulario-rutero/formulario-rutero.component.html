@@ -3,9 +3,9 @@
     <ejs-toolbar height="25px"  width='100%'>
         <e-items>
             <e-item text='Nuevo' [disabled]="!estadoBotones.btnNuevo"  prefixIcon='e-icons e-justify' overflow='Show' (click)="nuevo()" showTextOn='overflow'></e-item>
-            <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' (click)="modificar()" showTextOn='overflow'></e-item>
+            <e-item text='Modificar' [disabled]="!estadoBotones.btnModificar"  prefixIcon='e-icons e-edit' overflow='Show' (click)="ClickModificar()" showTextOn='overflow'></e-item>
             <e-item text='Grabar' [disabled]="!estadoBotones.btnGrabar"  prefixIcon='e-icons e-save' (click)="PosRutas()" overflow='Show' showTextOn='overflow'></e-item>
-            <e-item text='Anular' [disabled]="!estadoBotones.btnAnular"  prefixIcon='e-icons e-trash' overflow='Show' showTextOn='overflow'></e-item>
+            <e-item text='Anular' [disabled]="!estadoBotones.btnAnular"  prefixIcon='e-icons e-trash' overflow='Show' (click)="anularRutas()" showTextOn='overflow'></e-item>
             <e-item text='Cancelar' [disabled]="!estadoBotones.btnSalir" prefixIcon='e-icons e-undo' overflow='Show' (click)="Cancelar()" showTextOn='overflow'></e-item>
         </e-items>
     </ejs-toolbar>
@@ -25,7 +25,7 @@
                     <c-row class="mt-2">
                         <c-col lg="4">
                             <label cLabel>N°Documento</label>
-                            <input cFormControl id="ndocumento" (keydown.enter)="EnterConsulta()" formControlName="ndocumento" sizing="sm" type="text">
+                            <input cFormControl #ndocumento id="ndocumento" (keydown.enter)="EnterConsulta()" formControlName="ndocumento" sizing="sm" type="text">
                            
                         </c-col>
                         <c-col lg="4">
