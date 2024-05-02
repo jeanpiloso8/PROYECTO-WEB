@@ -53,6 +53,20 @@
                             <e-column field='id_cab' headerText='Id' width='100' textAlign='center'></e-column>
                             <e-column headerText="" width="150" [commands]="commands"></e-column>
                             <e-column field='nvendedor' headerText='Vendedor' width='100' textAlign='left'></e-column>
+                            <e-column field='estado_general' headerText='Estado' width='80'>
+                                <ng-template #template let-contactosList>
+                                    @if(contactosList.estado_general === 'Completado') {
+                                    <span class="badge bg-success me-1">Completado</span>
+                                    }@else if(contactosList.estado_general === 'En Proceso') {
+                                    <span class="badge bg-secondary me-1">En Proceso</span>
+                                    }
+                                    @else if(contactosList.estado_general === 'Pendiente') {
+                                    <span class="badge bg-primary me-1">Pendiente</span>
+                                    }
+                  
+                                  </ng-template>
+                              </e-column>
+
                             <e-column field='fecha' headerText='Fecha' width='130' textAlign='center'>
                                 <ng-template #template let-data>
                                     {{ data.fecha | date: 'yyyy-MM-dd' }}

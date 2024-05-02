@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RuteroVendedorService } from '../rutero-vendedor.service'
 import { cadenaErrores } from '../../../shared-features/utilities/parsearErrores'
 import { ToastrService } from 'ngx-toastr';
-import { cab,det } from '../datasources';
+import { cab, det } from '../datasources';
 import { CommandModel, GridModel, SearchSettingsModel, ToolbarItems } from '@syncfusion/ej2-angular-grids';
 import { cilSearch,cilPlus } from '@coreui/icons';
 import { vendedor } from '../../visitas-vendedor/datasources';
@@ -10,6 +10,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoAccion } from 'src/app/shared-features/enums/TipoAccion';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ConsoleService } from '@ng-select/ng-select/lib/console.service';
+import { logo } from '../../../icons/logo';
+import { TextColorDirective } from '@coreui/angular';
 @Component({
   selector: 'app-listado-rutero',
   templateUrl: './listado-rutero.component.html',
@@ -75,27 +78,61 @@ public pageOption: Object;
 
     this.Obtener(vendedor,fechaDesdeValue,fechaHastaValue);
   }
-  Obtener(vendedor:string,dfecha:string,hfecha:string){
-    this.crutas=[];
-    this.drutas=[];
-    this.ruteroService.CabRura(vendedor,dfecha,hfecha).subscribe({
+  Obtener(vendedor: string, dfecha: string, hfecha: string) {
+    this.crutas = [];
+    this.drutas = [];
+    this.ruteroService.CabRura(vendedor, dfecha, hfecha).subscribe({
       next: (respuesta) => {
-        if (respuesta.isSuccess)
-        {        
+        if (respuesta.isSuccess) {
           this.crutas = respuesta.result;
+          console.log(this.crutas);
           this.crutas.forEach(item => {
-            // Concatenar los rutasDetalles del elemento actual al arreglo de todos los rutasDetalles
+            // Verifica si todos los elementos en rutasDetalles tienen estado_visita como 'PE'
+            const todosPendientes = item.rutasDetalles.every((detalle: any) => detalle.estado_visita === 'PE');
+
+            // Verifica si todos los elementos en rutasDetalles tienen estado_visita como 'TE'
+            const todosCompletados = item.rutasDetalles.every((detalle: any) => detalle.estado_visita === 'TE');
+
+            // Verifica si hay al menos un 'PE' y al menos un 'TE'
+            const tienePEyTE = item.rutasDetalles.some((detalle: any) => detalle.estado_visita === 'PE') && item.rutasDetalles.some((detalle: any) => detalle.estado_visita === 'TE');
+
+            // Determina el valor de estado_general según las condiciones
+            if (todosPendientes) {
+              item.estado_general = 'Pendiente';
+            } else if (todosCompletados) {
+              item.estado_general = 'Completado';
+            } else if (tienePEyTE) {
+              item.estado_general = 'En Proceso';
+            } else {
+              item.estado_general = ''; // Manejar otros casos si es necesario
+            }
+
             this.drutas.push(...item.rutasDetalles);
           });
-            
+          console.log(this.crutas);
           this.childGrid = {
-            dataSource: this.drutas,
+            dataSource: this.drutas.map(item => {
+              if (item.estado_visita === 'PE') {
+                item.estado_visita_display = 'Pendiente';
+              } else if (item.estado_visita === 'TE') {
+                item.estado_visita_display = 'Completado';
+              } else {
+                item.estado_visita_display = ''; // Manejar otros casos si es necesario
+              }
+              return item;
+            }),
             queryString: 'id_cab',
             columns: [
-                { field: 'ncliente', headerText: 'Cliente', textAlign: 'Left', width: 100 },
-                { field: 'direccion', headerText: 'Dirección', width: 120 }
+              { field: 'ncliente', headerText: 'Cliente', textAlign: 'Left', width: 100 },
+              { field: 'direccion', headerText: 'Dirección', width: 120 },
+              {
+                field: 'estado_visita_display',
+                headerText: 'Estado',
+                width: 120,
+              }
             ]
-        };
+          };
+          //console.log(this.childGrid);
         }
       },
       error: (errores) => {
@@ -103,7 +140,7 @@ public pageOption: Object;
       }
     });
   }
-  
+
 
 
   public commandClick(args: any): void {
@@ -114,28 +151,35 @@ public pageOption: Object;
     }
     else if (args.commandColumn.title && args.commandColumn.title === 'Eliminar') {
       const Id = args.rowData.id_cab;
+      const estado = args.rowData.estado_general
+      if(estado == "En Proceso" || estado == "Completado"){
+        this.toastr.warning("No se Puede Anular, Rutas se encuentra en estado:"+estado,"Error");
+
+      }else{
+        Swal.fire({
+          title: "Seguro desea Anular Transacción",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si",
+          cancelButtonText: "No"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.ruteroService.AnularRutaID(Id).subscribe({
+              next: (respuesta) => {
+                this.toastr.success('Registro Anulado Correctamente');
+                this.search();
+              },
+              error: (errores) => {
+                this.toastr.error(cadenaErrores(errores));
+              }
+            });
+          }
+        });  
+      }
       //console.log(args.rowData.id_cab);
-      Swal.fire({
-        title: "Seguro desea Anular Transacción",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si",
-        cancelButtonText: "No"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.ruteroService.AnularRutaID(Id).subscribe({
-            next: (respuesta) => {
-              this.toastr.success('Registro Anulado Correctamente');
-              this.search();
-            },
-            error: (errores) => {
-              this.toastr.error(cadenaErrores(errores));
-            }
-          });
-        }
-      });  
+      
     }else if (args.commandColumn.title && args.commandColumn.title === 'Ver'){
       const Id = args.rowData.id_cab;
       this.Ver(Id);

@@ -33,6 +33,7 @@ export class FormularioRuteroComponent implements OnInit {
   FormTable: any;
   Form:any;
   anulado :string="";
+  visita :boolean=false;
   public localFieldsVendedor: Object = { text: 'nombre', value: 'codigo' };
   public localFieldsCliente: Object = { text: 'nombre', value: 'codigo' };
   public detalleRutas: DetRuta[] = [];
@@ -254,6 +255,7 @@ export class FormularioRuteroComponent implements OnInit {
     //this.cbcliente=[];
     let idx: number = 0;
     this.anulado = "";
+    this.visita=false;
     return new Promise((resolve, reject) => {
       this.ruteroService.DetRutaID(id).subscribe({
         next: (data) => {
@@ -276,6 +278,9 @@ export class FormularioRuteroComponent implements OnInit {
               this.inicializarFromTable(name);
             });
             this.detalleRutas = data.result.rutasDetalles;
+            const tieneTE = this.detalleRutas.some(item => item.estado_visita === 'TE');
+            this.visita = tieneTE;
+            console.log(this.visita);
             idx = 0;
             this.detalleRutas.forEach(detalle => {
               const nombreForm = detalle.cnoFormulario;
@@ -319,8 +324,13 @@ export class FormularioRuteroComponent implements OnInit {
      // this.OrdenarIndex();
     }else{
       if(this.accion == TipoAccion.Update){
-        this.detalleRutas[idx].estado ="Delete";
-        this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
+        if(this.detalleRutas[idx].estado_visita == "TE"){
+          this.toastr.warning(`No se puede eliminar, Vendedor ya realizo visita al Cliente ${this.detalleRutas[idx].ncliente}.`, 'Información del Sistema');       
+        }else{
+          this.detalleRutas[idx].estado ="Delete";
+          this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
+        }
+        
       }
     }
   }
@@ -353,8 +363,15 @@ export class FormularioRuteroComponent implements OnInit {
     const valor:any = this.FormTable.get(this.detalleRutas[idx].cnoFormulario).get(celda).value;
     let estado = this.detalleRutas[idx].estado;
    if(estado == "Read"){
-      this.detalleRutas[idx].estado ="Update";
-      this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
+      if(this.detalleRutas[idx].estado_visita == "TE"){
+        this.FormTable.get(this.detalleRutas[idx].cnoFormulario).get(celda).patchValue(this.detalleRutas[idx].cliente);
+        this.toastr.warning(`Vendedor ya realizo visita al Cliente ${this.detalleRutas[idx].ncliente}.`, 'Información del Sistema');
+        return;
+      }else{
+        this.detalleRutas[idx].estado ="Update";
+        this.detalleRutas[idx].usuario_modifica=this.securityService.getUserName();
+      }
+     
     }
     switch (celda) {
 
@@ -406,7 +423,7 @@ btnNuevoProducto() {
      if(this.accion == TipoAccion.Create) idcab= 0; else idcab =0 ;//caso contrario secuencial
      detalle.id_cab = idcab;
      detalle.estado ="Create";
-   
+      detalle.estado_visita="PE";
    
    if(this.detalleRutas.length > 0 && this.detalleRutas != undefined){
      
@@ -505,21 +522,28 @@ btnNuevoProducto() {
     }
   }
   anularRutas(){
-    Swal.fire({
-      title: "Seguro desea Anular Transacción",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-      cancelButtonText: "No"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.accion = TipoAccion.Delete;
-        this.PosRutas()
-      }
-    });
+    console.log(this.visita);
+    if(this.visita != true){
+      Swal.fire({
+        title: "Seguro desea Anular Transacción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.accion = TipoAccion.Delete;
+          this.PosRutas()
+        }
+      });
+    }else{
+      this.toastr.warning('Existen ya rutas completada, se recomienda modificar', 'Error al Anular', { timeOut: 2000 });
 
-   ;
+    }
+    
+
+   
   }
 }

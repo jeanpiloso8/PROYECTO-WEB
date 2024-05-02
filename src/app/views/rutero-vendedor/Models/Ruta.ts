@@ -19,5 +19,6 @@ export class CabRuta{
    estado? :string;
    usuario_crea?:string;
    usuario_modifica?:string
+   estado_visita?:string
    cnoFormulario?: string;
    }
