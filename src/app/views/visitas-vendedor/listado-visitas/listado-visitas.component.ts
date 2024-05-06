@@ -62,7 +62,6 @@ inicializar(){
 
 
   obtenerData(desde:string,hasta:string,vendedor:string) {
-  console.log(desde);
     const body = {
       "op":"ConsultarVisita",
     "data":{

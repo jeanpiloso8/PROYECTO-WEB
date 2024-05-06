@@ -4,6 +4,8 @@ import { ServiceService } from '../../seguimiento-vendedor/service.service';
 import { CommandModel, ToolbarItems, GridComponent, PdfQueryCellInfoEventArgs, ExcelQueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
 import { ClickEventArgs } from '@syncfusion/ej2-navigations';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { vendedor } from '../../visitas-vendedor/datasources';
 @Component({
   selector: 'app-listado-seguimiento',
   templateUrl: './listado-seguimiento.component.html',
@@ -19,31 +21,52 @@ export class ListadoSeguimientoComponent implements OnInit {
   public pageOption: Object;
   public isInitial: Boolean = true;
   @ViewChild('grid') public grid: GridComponent;
+  cbVendedor:any[]=[];
+  public localFielvendedor: Object = { text: 'nombre',value:'codigo'};
+  Form :any;
+  fechadesde = new FormControl('', {validators: [Validators.required]});
+  fechahasta = new FormControl('', {validators: [Validators.required]});
+  vendedor = new FormControl('', {validators: [Validators.required]});
   constructor(private service : ServiceService,private toastr: ToastrService){}
 ngOnInit(): void {
+  this.cbVendedor=vendedor;
   this.commands = [{ buttonOption: { content: '', cssClass: 'e-outline e-small e-icons e-location'}, title:'Ubicacion' },
   ];
-  this.pageOption = {pageCount: 5, pageSize:10};
+  this.pageOption = {pageCount: 5, pageSize:50};
   this.toolbar = ['ExcelExport', 'PdfExport', 'CsvExport','Search'];
-  this.obtenerData();
+  this.inicializar();
 }
 
-  obtenerData() {
+inicializar(){
+  this.Form = new FormGroup({
+    fechadesde:this.fechadesde,
+    fechahasta:this.fechahasta,
+    vendedor:this.vendedor,
+  });
+  const currentDate = new Date().toISOString().split('T')[0];
+  this.Form.patchValue({
+    fechadesde: currentDate,
+    fechahasta: currentDate
+  });
+  this.obtenerData(this.Form.controls.fechadesde.value,this.Form.controls.fechahasta.value,"");
+}
+obtenerData(desde:string,hasta:string,vendedor:string) {
     const body = {
       "op":"ConsultarVisita",
     "data":{
-      "vendedor":"",
-      "dfecha":"2024-04-23",
-      "hfecha":"2024-04-23"
-    }
-    }
+      "vendedor":vendedor,
+      "dfecha":desde,
+      "hfecha":hasta
+    } 
+    } 
       
     this.service.obtener(body).subscribe(data => {
       this.datos = data;
-      console.log(data);
     })
   }
-
+  consultar(){
+    this.obtenerData(this.Form.controls.fechadesde.value,this.Form.controls.fechahasta.value,this.Form.controls.vendedor.value);
+  }
   public commandClick(args: any): void {
 
     if (args.commandColumn.title && args.commandColumn.title=== 'Ubicacion')

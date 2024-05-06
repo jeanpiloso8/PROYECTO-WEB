@@ -1,8 +1,9 @@
 
+    <form [formGroup]="Form">
     <div class="right-z-index-top-toolbar">
         <ejs-toolbar height="25px"  width='100%'>
             <e-items>
-                <e-item text='Consultar'  prefixIcon='e-icons e-search'  overflow='Show' showTextOn='overflow'></e-item>     
+                <e-item text='Consultar'  prefixIcon='e-icons e-search' (click)="consultar()"  overflow='Show' showTextOn='overflow'></e-item>     
             </e-items>
         </ejs-toolbar>
     </div>   
@@ -15,18 +16,21 @@
                     <svg [cIcon]="icons.cilSearch" size="lg" title="List Icon" class="mr-2"></svg>&nbsp;  Búsqueda
                  </div>
     
-                <div class="card-body">
+                 <div class="card-body">
                     <div class="row">
                         <c-row class="mt-2">
-                            <c-col lg="3">
+                            <c-col lg="4">
                                 <label cLabel>Desde:</label>
-                                <input cFormControl id="fechadesde" sizing="sm" type="date">                   
+                                <input cFormControl id="fechadesde" formControlName="fechadesde" sizing="sm" type="date">                   
                             </c-col>
-                            <c-col lg="3">
+                            <c-col lg="4">
                                 <label cLabel>Hasta:</label>
-                                <input cFormControl id="fechahasta" sizing="sm" type="date">                                
+                                <input cFormControl id="fechahasta" formControlName="fechahasta" sizing="sm" type="date">                                
                             </c-col>
-                         
+                            <c-col lg="4">
+                                <label cLabel>Vendedor:</label>
+                                <ejs-combobox  id='vendedor' formControlName="vendedor" [allowCustom]="false" [dataSource]='cbVendedor'   [fields]= 'localFielvendedor'></ejs-combobox>                                 
+                            </c-col>
                             </c-row>
                         </div>
                         </div>
@@ -40,7 +44,7 @@
                                     <div class="col-lg-12">
                                         <ejs-grid #grid id='DefaultExport'  [dataSource]="datos" [allowPaging]="true" [pageSettings]='pageOption' [allowResizing]="true" [allowSorting]='true' allowGrouping='true' [toolbar]='toolbar' enableStickyHeader=true 
                                      (commandClick)="commandClick($event)" [allowSorting]='true'  [allowExcelExport]='true' [allowPdfExport]='true'  (toolbarClick)='toolbarClick($event)' (dataBound)='dataBound()'
-                                     (excelQueryCellInfo)='exportQueryCellInfo($event)' (pdfQueryCellInfo)='exportQueryCellInfo($event)' height='350'>
+                                     (excelQueryCellInfo)='exportQueryCellInfo($event)' (pdfQueryCellInfo)='exportQueryCellInfo($event)' height='800'>
                                             <e-columns>
                                                 <e-column field='id' headerText='Id' width='10' textAlign='Right' [visible]="false" [isPrimaryKey]="true"></e-column>
                                                 <e-column headerText="" width="75" [commands]="commands" textAlign="center"></e-column>
@@ -58,4 +62,4 @@
                                     </div>
                                     </div>
                                  </div>
-                                 
+                                </form>
